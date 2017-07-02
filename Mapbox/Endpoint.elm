@@ -20,11 +20,30 @@ module Mapbox.Endpoint
         , highContrast
         )
 
-{-| Description
+{-| Endpoint module construct correct endpoints to Mapbox, and provide predefined endpoints as well as custom endpoints. It ensures that Maps endpoints are correctly reversed in the url generation. (As indicated in Mapbox API for v4 version of Maps.)
+
+
+# Types
+
 @docs Endpoint
 @docs Maps
+
+
+# Url Generation
+
 @docs toUrl
+
+
+# Maps Endpoints
+
+
+## Custom Endpoints
+
 @docs maps
+
+
+## Predefined Endpoints
+
 @docs streets
 @docs light
 @docs dark
@@ -39,10 +58,12 @@ module Mapbox.Endpoint
 @docs pirates
 @docs emerald
 @docs highContrast
+
 -}
 
 
-{-| -}
+{-| Endpoint type typed according to the service used on Mapbox. They are generated using constructors.
+-}
 type Endpoint a
     = Endpoint
         { api : String
@@ -51,7 +72,8 @@ type Endpoint a
         }
 
 
-{-| -}
+{-| Type for Maps Endpoints.
+-}
 type Maps
     = Maps
 
@@ -71,7 +93,8 @@ concatEndpoint api version =
     api ++ "/" ++ version
 
 
-{-| -}
+{-| Generate string from Endpoints in the correct order to use it into Mapbox urls. You generally don't need to use it, as Mapbox.url calls it.
+-}
 toUrl : Endpoint a -> String
 toUrl ((Endpoint { api, version }) as endpoint) =
     let
@@ -111,91 +134,111 @@ endpoint maps api version =
 -}
 
 
-{-| -}
+{-| Produce an `Endpoint Maps` endpoint, allowing to use custom username and id.
+-}
 maps : String -> String -> Endpoint Maps
 maps username id =
     endpoint True (username ++ "." ++ id) "v4"
 
 
-{-| -}
+mapboxEndpoint : String -> Endpoint Maps
+mapboxEndpoint =
+    maps "mapbox"
+
+
+{-| Provide "mapbox.streets" endpoint.
+-}
 streets : Endpoint Maps
 streets =
-    maps "mapbox" "streets"
+    mapboxEndpoint "streets"
 
 
-{-| -}
+{-| Provide "mapbox.light" endpoint.
+-}
 light : Endpoint Maps
 light =
-    maps "mapbox" "light"
+    mapboxEndpoint "light"
 
 
-{-| -}
+{-| Provide "mapbox.dark" endpoint.
+-}
 dark : Endpoint Maps
 dark =
-    maps "mapbox" "dark"
+    mapboxEndpoint "dark"
 
 
-{-| -}
+{-| Provide "mapbox.satellite" endpoint.
+-}
 satellite : Endpoint Maps
 satellite =
-    maps "mapbox" "satellite"
+    mapboxEndpoint "satellite"
 
 
-{-| -}
+{-| Provide "mapbox.streets-satellite" endpoint.
+-}
 streetsSatellite : Endpoint Maps
 streetsSatellite =
-    maps "mapbox" "streets-satellite"
+    mapboxEndpoint "streets-satellite"
 
 
-{-| -}
+{-| Provide "mapbox.wheatpaste" endpoint.
+-}
 wheatpaste : Endpoint Maps
 wheatpaste =
-    maps "mapbox" "wheatpaste"
+    mapboxEndpoint "wheatpaste"
 
 
-{-| -}
+{-| Provide "mapbox.streets-basic" endpoint.
+-}
 streetsBasic : Endpoint Maps
 streetsBasic =
-    maps "mapbox" "streets-basic"
+    mapboxEndpoint "streets-basic"
 
 
-{-| -}
+{-| Provide "mapbox.comic" endpoint.
+-}
 comic : Endpoint Maps
 comic =
-    maps "mapbox" "comic"
+    mapboxEndpoint "comic"
 
 
-{-| -}
+{-| Provide "mapbox.outdoors" endpoint.
+-}
 outdoors : Endpoint Maps
 outdoors =
-    maps "mapbox" "outdoors"
+    mapboxEndpoint "outdoors"
 
 
-{-| -}
+{-| Provide "mapbox.run-bike-hike" endpoint.
+-}
 runBikeHike : Endpoint Maps
 runBikeHike =
-    maps "mapbox" "run-bike-hike"
+    mapboxEndpoint "run-bike-hike"
 
 
-{-| -}
+{-| Provide "mapbox.pencil" endpoint.
+-}
 pencil : Endpoint Maps
 pencil =
-    maps "mapbox" "pencil"
+    mapboxEndpoint "pencil"
 
 
-{-| -}
+{-| Provide "mapbox.pirates" endpoint.
+-}
 pirates : Endpoint Maps
 pirates =
-    maps "mapbox" "pirates"
+    mapboxEndpoint "pirates"
 
 
-{-| -}
+{-| Provide "mapbox.emerald" endpoint.
+-}
 emerald : Endpoint Maps
 emerald =
-    maps "mapbox" "emerald"
+    mapboxEndpoint "emerald"
 
 
-{-| -}
+{-| Provide "mapbox.high-contrast" endpoint.
+-}
 highContrast : Endpoint Maps
 highContrast =
-    maps "mapbox" "high-contrast"
+    mapboxEndpoint "high-contrast"

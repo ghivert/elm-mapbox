@@ -9,14 +9,23 @@ module Mapbox.Maps.Tiles
         , features
         )
 
-{-| Description
+{-| Allows to access tiles API. The tiles are returned as image from Mapbox. As there is no notion of image into elm today, they only return the correct url to use it according to what you want to do.
+
+
+# Tiles
+
 @docs Coordinates
 @docs Format
 @docs ImageFormat
 @docs tiles
+
+
+# Features Tiles
+
 @docs GeoCoordinates
 @docs Parameters
 @docs features
+
 -}
 
 import Mapbox
@@ -26,7 +35,8 @@ import GeoJson exposing (GeoJson)
 import Http
 
 
-{-| -}
+{-| Coordinates required by tiles API, in form of x, y and z.
+-}
 type alias Coordinates =
     { x : Int
     , y : Int
@@ -34,14 +44,16 @@ type alias Coordinates =
     }
 
 
-{-| -}
+{-| Format in which you want your tile.
+-}
 type Format
     = UtfGrid
     | Vector
     | Image ImageFormat
 
 
-{-| -}
+{-| Image format in which you wan your tile.
+-}
 type ImageFormat
     = Png
     | Png32
@@ -102,20 +114,23 @@ imageFormatToUrl imageFormat =
             ".jpg90"
 
 
-{-| -}
+{-| Returns an url to Mapbox, retrieving a tile from the site. It can be either an UTFGrid, a vector, or an image. You can probably extract the data from UTFGrid directly in elm, but you probably need to use JS to retrieve vectors or images.
+-}
 tiles : Endpoint Maps -> String -> Coordinates -> Bool -> Format -> String
 tiles endpoint accessToken coordinates retina format =
     Mapbox.url endpoint accessToken (coordinatesToOptions coordinates ++ Helpers.retinaToUrl retina) (formatToUrl format) []
 
 
-{-| -}
+{-| Geographical coordinates.
+-}
 type alias GeoCoordinates =
     { longitude : Float
     , latitude : Float
     }
 
 
-{-| -}
+{-| Parameters accepted by the features tiles requests.
+-}
 type alias Parameters =
     { radius : Maybe Int
     , limit : Maybe Int
@@ -149,7 +164,8 @@ parameterTuple name value =
     ( name, toString value )
 
 
-{-| -}
+{-| Retrieve a FeatureCollection from tiles. It returns an `Http.Request GeoJson`, in the format you can have in [`mgold/elm-geojson`](https://github.com/mgold/elm-geojson).
+-}
 features : Endpoint Maps -> String -> GeoCoordinates -> Parameters -> Http.Request GeoJson
 features endpoint accessToken coordinates parameters =
     Http.get (Mapbox.url endpoint accessToken ("/tilequery" ++ geoCoordinatesToUrl coordinates) ".json" (parametersToUrl parameters)) GeoJson.decoder
