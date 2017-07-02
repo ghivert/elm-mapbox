@@ -1,10 +1,12 @@
 module Mapbox.Maps.SlippyMap exposing (Options, Position, Size, slippyMap)
 
-{-| Description
+{-| Allows to embed a slippy map directly into your Html view.
+
 @docs Options
 @docs Position
 @docs Size
 @docs slippyMap
+
 -}
 
 import Mapbox
@@ -14,7 +16,8 @@ import Html.Attributes
 import Helpers
 
 
-{-| -}
+{-| Options you can use into slippy maps.
+-}
 type alias Options =
     { zoomwheel : Bool
     , zoompan : Bool
@@ -23,7 +26,8 @@ type alias Options =
     }
 
 
-{-| -}
+{-| Initial position you can set into slippy maps.
+-}
 type alias Position =
     { zoom : Int
     , latitude : Int
@@ -31,7 +35,8 @@ type alias Position =
     }
 
 
-{-| -}
+{-| Size of the iframe.
+-}
 type alias Size =
     { width : Int
     , height : Int
@@ -76,8 +81,30 @@ positionToUrl position =
                 |> (++) "#"
 
 
-{-| -}
-slippyMap : Endpoint Maps -> String -> Maybe Options -> Maybe Position -> Size -> Html msg
+{-| Embed a slippy map into your Html view. As indicated in the Readme, you can easily use it like this:
+
+    import Mapbox.Maps.SlippyMap as Mapbox
+    import Mapbox.Endpoint as Endpoint
+
+    mapboxToken : String
+    mapboxToken =
+        "pk.eyJ1IjoiZ2hpdmVydCIsImEiOiJjajRqbzFlcWYwajVzMzNzZTdpZXU3MTRnIn0.wSGB3LCr5OcvPqQ61BqYyg"
+
+
+    -- Embed a slippy map into your website and set Options, Hash and Size of the iframe.
+
+    embeddedSlippyMap : Html msg
+    embeddedSlippyMap =
+        Mapbox.slippyMap Endpoint.streets mapboxToken Nothing Nothing (Mapbox.Size 1000 1000)
+
+-}
+slippyMap :
+    Endpoint Maps
+    -> String
+    -> Maybe Options
+    -> Maybe Position
+    -> Size
+    -> Html msg
 slippyMap endpoint accessToken options position { width, height } =
     Html.iframe
         [ Html.Attributes.src (Mapbox.url endpoint accessToken (optionsToUrl options) (".html" ++ positionToUrl position) [])
